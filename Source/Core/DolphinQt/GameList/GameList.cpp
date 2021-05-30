@@ -2,8 +2,8 @@
 // Licensed under GPLv2+
 // Refer to the license.txt file included.
 
+#include <QApplication>
 #ifdef _WIN32
-#include <QCoreApplication>
 #include <shlobj.h>
 #include <wil/com.h>
 
@@ -119,7 +119,6 @@ void GameList::MakeListView()
   m_list->setTabKeyNavigation(false);
   m_list->setSelectionMode(QAbstractItemView::ExtendedSelection);
   m_list->setSelectionBehavior(QAbstractItemView::SelectRows);
-  m_list->setAlternatingRowColors(true);
   m_list->setShowGrid(false);
   m_list->setSortingEnabled(true);
   m_list->setCurrentIndex(QModelIndex());
@@ -127,6 +126,10 @@ void GameList::MakeListView()
   m_list->setWordWrap(false);
   // Have 1 pixel of padding above and below the 32 pixel banners.
   m_list->verticalHeader()->setDefaultSectionSize(32 + 2);
+
+  m_list->setAlternatingRowColors(true);
+  connect(qApp, &QApplication::paletteChanged, this, &GameList::UpdateAlternatingRowColor);
+  UpdateAlternatingRowColor();
 
   connect(m_list, &QTableView::customContextMenuRequested, this, &GameList::ShowContextMenu);
   connect(m_list->selectionModel(), &QItemSelectionModel::selectionChanged,
@@ -223,6 +226,32 @@ void GameList::UpdateColumnVisibility()
   SetVisiblity(Column::BlockSize, config.m_showBlockSizeColumn);
   SetVisiblity(Column::Compression, config.m_showCompressionColumn);
   SetVisiblity(Column::Tags, config.m_showTagsColumn);
+}
+
+void GameList::UpdateAlternatingRowColor()
+{
+  // The background color of rows in the GameList alternates between the Base color of
+  // QApplication::palette()'s Base color and m_list::palette()'s AlternateBase color. The Base
+  // color of m_list and AlternateBase color of QApplication have no effect on the table.
+
+  // Using the HSV color format makes it easy to get a lighter or darker shade of a color by just
+  // changing the value component.
+  QPalette palette = QApplication::palette();
+  const QColor base_color = palette.color(QPalette::Base);
+  constexpr int mid_gray = 0x80;
+  const int base_HSV_value = base_color.value();
+  const bool base_is_dark = base_HSV_value < mid_gray;
+
+  // Despite the difference in magnitudes these values produce roughly the same perceptual
+  // difference between the base and alternate colors.
+  constexpr int darker = -10;
+  constexpr int lighter = 25;
+
+  const int alternate_HSV_value = base_HSV_value + (base_is_dark ? lighter : darker);
+  const QColor alternate_color =
+      QColor::fromHsv(base_color.hue(), base_color.saturation(), alternate_HSV_value);
+  palette.setColor(QPalette::AlternateBase, alternate_color);
+  m_list->setPalette(palette);
 }
 
 void GameList::MakeEmptyView()

@@ -76,6 +76,7 @@ private:
   void NewTag();
   void DeleteTag();
   void UpdateColumnVisibility();
+  void UpdateAlternatingRowColor();
 
   void ZoomIn();
   void ZoomOut();
