@@ -35,27 +35,16 @@ u32 CSIDevice_DanceMat::MapPadStatus(const GCPadStatus& pad_status)
 {
   // Map the dpad to the blue arrows, the buttons to the orange arrows
   // Z = + button, Start = - button. Active Life Mats have a different layout.
-  u16 map = 0;
-  if (pad_status.button & PAD_BUTTON_UP)
-    map |= 0x8;
-  if (pad_status.button & PAD_BUTTON_DOWN)
-    map |= 0x4;
-  if (pad_status.button & PAD_BUTTON_LEFT)
-    map |= 0x1;
-  if (pad_status.button & PAD_BUTTON_RIGHT)
-    map |= 0x2;
-  if (pad_status.button & PAD_BUTTON_Y)
-    map |= 0x400;  // Only Active Life Mat has this button. Maps as + button.
-  if (pad_status.button & PAD_BUTTON_A)
-    map |= 0x100;
-  if (pad_status.button & PAD_BUTTON_B)
-    map |= 0x200;
-  if (pad_status.button & PAD_BUTTON_X)
+
+  u16 mask = PAD_BUTTON_UP | PAD_BUTTON_DOWN | PAD_BUTTON_LEFT | PAD_BUTTON_RIGHT | PAD_BUTTON_A |
+             PAD_BUTTON_B | PAD_TRIGGER_Z | PAD_BUTTON_START;
+
+  u16 map = pad_status.button & mask;
+
+  if (pad_status.button & PAD_BUTTON_Y)  // PAD_BUTTON_Y == 0x800
+    map |= 0x400;                        // Only Active Life Mat has this button. Maps as + button.
+  if (pad_status.button & PAD_BUTTON_X)  // PAD_BUTTON_X == 0x400
     map |= 0x800;  // Only Active Life Mat has this button. Maps as Right Foot Right.
-  if (pad_status.button & PAD_TRIGGER_Z)
-    map |= 0x10;
-  if (pad_status.button & PAD_BUTTON_START)
-    map |= 0x1000;
 
   return (u32)(map << 16) | 0x8080;
 }
