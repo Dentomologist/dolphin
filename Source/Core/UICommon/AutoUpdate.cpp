@@ -214,7 +214,6 @@ void AutoUpdateChecker::TriggerUpdate(const AutoUpdateChecker::NewVersionInforma
     return;
   }
 
-  s_update_triggered = true;
 #ifdef OS_SUPPORTS_UPDATER
   std::map<std::string, std::string> updater_flags;
   updater_flags["this-manifest-url"] = info.this_manifest_url;
@@ -255,6 +254,7 @@ void AutoUpdateChecker::TriggerUpdate(const AutoUpdateChecker::NewVersionInforma
   {
     CloseHandle(pinfo.hThread);
     CloseHandle(pinfo.hProcess);
+    s_update_triggered = true;
   }
   else
   {
@@ -264,6 +264,10 @@ void AutoUpdateChecker::TriggerUpdate(const AutoUpdateChecker::NewVersionInforma
   if (popen(command_line.c_str(), "r") == nullptr)
   {
     ERROR_LOG_FMT(COMMON, "Could not start updater process: error={}", errno);
+  }
+  else
+  {
+    s_update_triggered = true;
   }
 #endif
 
