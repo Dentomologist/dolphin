@@ -710,7 +710,7 @@ static void HandleAddRemoveEvent(AddRemoveEvent evt)
     break;
   default:
     ERROR_LOG_FMT(CONTROLLERINTERFACE, "WGInput: Invalid add/remove controller event: {}",
-                  std::to_underlying(evt.type));
+                  static_cast<int>(evt.type));
   }
 }
 

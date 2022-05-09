@@ -101,8 +101,7 @@ void Timer::IncreaseResolution()
   // This adjusts behavior on CPUs with "performance" and "efficiency" cores
   PROCESS_POWER_THROTTLING_STATE PowerThrottling{};
   PowerThrottling.Version = PROCESS_POWER_THROTTLING_CURRENT_VERSION;
-  PowerThrottling.ControlMask =
-      PROCESS_POWER_THROTTLING_EXECUTION_SPEED | PROCESS_POWER_THROTTLING_IGNORE_TIMER_RESOLUTION;
+  PowerThrottling.ControlMask = PROCESS_POWER_THROTTLING_EXECUTION_SPEED;
   PowerThrottling.StateMask = 0;
   SetProcessInformation(GetCurrentProcess(), ProcessPowerThrottling, &PowerThrottling,
                         sizeof(PowerThrottling));

@@ -22,7 +22,7 @@ Common::Matrix44 BuildMatrixFromNode(const tinygltf::Node& node)
 {
   if (!node.matrix.empty())
   {
-    Common::Matrix44 matrix;
+    Common::Matrix44 matrix{};
     for (std::size_t i = 0; i < node.matrix.size(); i++)
     {
       matrix.data[i] = static_cast<float>(node.matrix[i]);
