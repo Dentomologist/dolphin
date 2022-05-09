@@ -5,7 +5,6 @@
 
 #ifdef _WIN32
 #include <windows.h>
-#include <processthreadsapi.h>
 #endif
 
 #include <algorithm>
@@ -61,29 +60,6 @@ static u64 xgetbv(u32 index)
   return _xgetbv(index);
 }
 
-static void WarnIfRunningUnderEmulation()
-{
-  // Starting with win11, arm64 windows can run x64 processes under emulation.
-  // This detects such a scenario and informs the user they probably want to run a native build.
-  PROCESS_MACHINE_INFORMATION info{};
-  if (!GetProcessInformation(GetCurrentProcess(), ProcessMachineTypeInfo, &info, sizeof(info)))
-  {
-    // Possibly we are running on version of windows which doesn't support ProcessMachineTypeInfo.
-    return;
-  }
-  if (info.MachineAttributes & MACHINE_ATTRIBUTES::KernelEnabled)
-  {
-    // KernelEnabled will be set if process arch matches the kernel arch - how we want people to run
-    // dolphin.
-    return;
-  }
-
-  // The process is not native; could use IsWow64Process2 to get native machine type, but for now
-  // we can assume it is arm64.
-  PanicAlertFmtT("This build of Dolphin is not natively compiled for your CPU.\n"
-                 "Please run the ARM64 build of Dolphin for a better experience.");
-}
-
 #endif  // ifdef _WIN32
 
 struct CPUIDResult
@@ -108,10 +84,6 @@ CPUInfo::CPUInfo()
 
 void CPUInfo::Detect()
 {
-#ifdef _WIN32
-  WarnIfRunningUnderEmulation();
-#endif
-
   // This should be much more reliable and easier than trying to get the number of cores out of the
   // CPUID data ourselves.
   num_cores = std::max(static_cast<int>(std::thread::hardware_concurrency()), 1);
