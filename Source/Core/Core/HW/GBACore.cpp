@@ -651,7 +651,7 @@ void Core::DoState(PointerWrap& p)
   {
     ::Core::DisplayMessage(fmt::format("GBA{} core not started. Aborting.", m_device_number + 1),
                            3000);
-    p.SetMode(PointerWrap::Mode::MODE_VERIFY);
+    p.SetVerifyMode();
     return;
   }
 
@@ -669,7 +669,7 @@ void Core::DoState(PointerWrap& p)
     ::Core::DisplayMessage(
         fmt::format("Incompatible ROM state in GBA{}. Aborting load state.", m_device_number + 1),
         3000);
-    p.SetMode(PointerWrap::Mode::MODE_VERIFY);
+    p.SetVerifyMode();
     return;
   }
 

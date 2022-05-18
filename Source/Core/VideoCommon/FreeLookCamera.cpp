@@ -324,7 +324,7 @@ void FreeLookCamera::DoState(PointerWrap& p)
                       "'{}'.  Aborting load state",
                       old_type_name, loaded_type_name);
       Core::DisplayMessage(message, 5000);
-      p.SetMode(PointerWrap::Mode::MODE_VERIFY);
+      p.SetVerifyMode();
     }
   }
 }

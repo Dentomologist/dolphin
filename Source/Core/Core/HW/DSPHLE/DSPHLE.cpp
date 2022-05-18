@@ -99,7 +99,7 @@ void DSPHLE::DoState(PointerWrap& p)
   {
     Core::DisplayMessage("State is incompatible with current DSP engine. Aborting load state.",
                          3000);
-    p.SetMode(PointerWrap::Mode::MODE_VERIFY);
+    p.SetVerifyMode();
     return;
   }
 

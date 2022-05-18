@@ -30,7 +30,7 @@ void VideoCommon_DoState(PointerWrap& p)
   if (p.IsReadMode() && software == true)
   {
     // change mode to abort load of incompatible save state.
-    p.SetMode(PointerWrap::Mode::MODE_VERIFY);
+    p.SetVerifyMode();
   }
 
   // BP Memory

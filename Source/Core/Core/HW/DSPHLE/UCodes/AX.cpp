@@ -755,7 +755,7 @@ void AXUCode::DoAXState(PointerWrap& p)
       Core::DisplayMessage("Could not find the DSP polyphase resampling coefficients used by the "
                            "savestate. Aborting load state.",
                            3000);
-      p.SetMode(PointerWrap::Mode::MODE_VERIFY);
+      p.SetVerifyMode();
       return;
     }
   }

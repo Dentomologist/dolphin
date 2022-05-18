@@ -59,6 +59,7 @@ public:
 
   void SetMode(Mode mode_) { mode = mode_; }
   void SetMeasureMode() { mode = Mode::MODE_MEASURE; }
+  void SetVerifyMode() { mode = Mode::MODE_VERIFY; }
   Mode GetMode() const { return mode; }
   bool IsReadMode() const { return mode == Mode::MODE_READ; }
   bool IsWriteMode() const { return mode == Mode::MODE_WRITE; }
