@@ -299,7 +299,7 @@ Common::Vec2 FreeLookCamera::GetFieldOfViewMultiplier() const
 void FreeLookCamera::DoState(PointerWrap& p)
 {
   if (p.IsWriteMode() ||
-      p.GetMode() == PointerWrap::Mode::MODE_MEASURE)
+      p.IsMeasureMode())
   {
     p.Do(m_current_type);
     if (m_camera_controller)

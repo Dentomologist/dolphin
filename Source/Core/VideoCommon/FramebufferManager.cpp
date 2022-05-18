@@ -911,7 +911,7 @@ void FramebufferManager::DoState(PointerWrap& p)
     return;
 
   if (p.IsWriteMode() ||
-      p.GetMode() == PointerWrap::Mode::MODE_MEASURE)
+      p.IsMeasureMode())
     DoSaveState(p);
   else
     DoLoadState(p);

@@ -432,7 +432,7 @@ void TextureCacheBase::SerializeTexture(AbstractTexture* tex, const TextureConfi
                                         PointerWrap& p)
 {
   // If we're in measure mode, skip the actual readback to save some time.
-  const bool skip_readback = p.GetMode() == PointerWrap::Mode::MODE_MEASURE;
+  const bool skip_readback = p.IsMeasureMode();
   p.DoPOD(config);
 
   if (skip_readback || CheckReadbackTexture(config.width, config.height, config.format))
@@ -459,7 +459,7 @@ void TextureCacheBase::SerializeTexture(AbstractTexture* tex, const TextureConfi
     // needing to allocate/free an extra buffer.
     u8* texture_data = p.DoExternal(total_size);
 
-    if (!skip_readback && p.GetMode() == PointerWrap::Mode::MODE_MEASURE)
+    if (!skip_readback && p.IsMeasureMode())
     {
       ERROR_LOG_FMT(VIDEO, "Couldn't acquire {} bytes for serializing texture.", total_size);
       return;
@@ -543,7 +543,7 @@ void TextureCacheBase::DoState(PointerWrap& p)
   p.Do(last_entry_id);
 
   if (p.IsWriteMode() ||
-      p.GetMode() == PointerWrap::Mode::MODE_MEASURE)
+      p.IsMeasureMode())
     DoSaveState(p);
   else
     DoLoadState(p);

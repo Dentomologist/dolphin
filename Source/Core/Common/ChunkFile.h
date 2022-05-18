@@ -61,6 +61,7 @@ public:
   Mode GetMode() const { return mode; }
   bool IsReadMode() const { return mode == Mode::MODE_READ; }
   bool IsWriteMode() const { return mode == Mode::MODE_WRITE; }
+  bool IsMeasureMode() const { return mode == Mode::MODE_MEASURE; }
   template <typename K, class V>
   void Do(std::map<K, V>& x)
   {
@@ -218,7 +219,7 @@ public:
     Do(count);
     u8* current = *m_ptr_current;
     *m_ptr_current += count;
-    if (mode != MODE_MEASURE && *m_ptr_current > m_ptr_end)
+    if (!IsMeasureMode() && *m_ptr_current > m_ptr_end)
     {
       // trying to read/write past the end of the buffer, prevent this
       mode = MODE_MEASURE;

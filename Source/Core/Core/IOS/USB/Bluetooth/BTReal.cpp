@@ -278,7 +278,7 @@ void BluetoothRealDevice::DoState(PointerWrap& p)
   // Prevent the transfer callbacks from messing with m_current_transfers after we have started
   // writing a savestate. We cannot use a scoped lock here because DoState is called twice and
   // we would lose the lock between the two calls.
-  if (p.GetMode() == PointerWrap::Mode::MODE_MEASURE ||
+  if (p.IsMeasureMode() ||
       p.GetMode() == PointerWrap::Mode::MODE_VERIFY)
     m_transfers_mutex.lock();
 
