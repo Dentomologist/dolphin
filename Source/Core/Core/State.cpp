@@ -156,7 +156,7 @@ static void DoState(PointerWrap& p)
             "This savestate was created using an incompatible version of Dolphin" :
             "This savestate was created using the incompatible version " + version_created_by;
     Core::DisplayMessage(message, OSD::Duration::NORMAL);
-    p.SetMode(PointerWrap::Mode::MODE_MEASURE);
+    p.SetMeasureMode();
     return;
   }
 
@@ -168,7 +168,7 @@ static void DoState(PointerWrap& p)
     OSD::AddMessage(fmt::format("Cannot load a savestate created under {} mode in {} mode",
                                 is_wii ? "Wii" : "GC", is_wii_currently ? "Wii" : "GC"),
                     OSD::Duration::NORMAL, OSD::Color::RED);
-    p.SetMode(PointerWrap::Mode::MODE_MEASURE);
+    p.SetMeasureMode();
     return;
   }
 
@@ -186,7 +186,7 @@ static void DoState(PointerWrap& p)
                                 Memory::GetExRamSizeReal(), Memory::GetExRamSizeReal() / 0x100000U,
                                 state_mem1_size, state_mem1_size / 0x100000U, state_mem2_size,
                                 state_mem2_size / 0x100000U));
-    p.SetMode(PointerWrap::Mode::MODE_MEASURE);
+    p.SetMeasureMode();
     return;
   }
 

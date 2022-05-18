@@ -275,7 +275,7 @@ void GameFileCache::DoState(PointerWrap* p, u64 size)
   {
     if (header.revision != CACHE_REVISION || header.expected_size != size)
     {
-      p->SetMode(PointerWrap::Mode::MODE_MEASURE);
+      p->SetMeasureMode();
       return;
     }
   }

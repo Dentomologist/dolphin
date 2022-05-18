@@ -58,6 +58,7 @@ public:
   }
 
   void SetMode(Mode mode_) { mode = mode_; }
+  void SetMeasureMode() { mode = Mode::MODE_MEASURE; }
   Mode GetMode() const { return mode; }
   bool IsReadMode() const { return mode == Mode::MODE_READ; }
   bool IsWriteMode() const { return mode == Mode::MODE_WRITE; }
@@ -223,7 +224,7 @@ public:
     if (!IsMeasureMode() && *m_ptr_current > m_ptr_end)
     {
       // trying to read/write past the end of the buffer, prevent this
-      mode = MODE_MEASURE;
+      SetMeasureMode();
     }
     return current;
   }
@@ -299,7 +300,7 @@ public:
           "Error: After \"{0}\", found {1} ({2:#x}) instead of save marker {3} ({4:#x}). Aborting "
           "savestate load...",
           prevName, cookie, cookie, arbitraryNumber, arbitraryNumber);
-      mode = PointerWrap::Mode::MODE_MEASURE;
+      SetMeasureMode();
     }
   }
 
