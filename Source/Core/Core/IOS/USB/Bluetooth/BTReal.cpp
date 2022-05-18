@@ -279,7 +279,7 @@ void BluetoothRealDevice::DoState(PointerWrap& p)
   // writing a savestate. We cannot use a scoped lock here because DoState is called twice and
   // we would lose the lock between the two calls.
   if (p.IsMeasureMode() ||
-      p.GetMode() == PointerWrap::Mode::MODE_VERIFY)
+      p.IsVerifyMode())
     m_transfers_mutex.lock();
 
   std::vector<u32> addresses_to_discard;

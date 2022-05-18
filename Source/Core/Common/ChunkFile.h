@@ -62,6 +62,7 @@ public:
   bool IsReadMode() const { return mode == Mode::MODE_READ; }
   bool IsWriteMode() const { return mode == Mode::MODE_WRITE; }
   bool IsMeasureMode() const { return mode == Mode::MODE_MEASURE; }
+  bool IsVerifyMode() const { return mode == Mode::MODE_VERIFY; }
   template <typename K, class V>
   void Do(std::map<K, V>& x)
   {

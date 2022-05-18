@@ -684,7 +684,7 @@ void Core::DoState(PointerWrap& p)
   std::vector<u8> core_state;
   core_state.resize(m_core->stateSize(m_core));
 
-  if (p.IsWriteMode() || p.GetMode() == PointerWrap::Mode::MODE_VERIFY)
+  if (p.IsWriteMode() || p.IsVerifyMode())
   {
     m_core->saveState(m_core, core_state.data());
   }
