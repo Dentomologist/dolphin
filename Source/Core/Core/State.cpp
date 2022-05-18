@@ -594,7 +594,7 @@ void LoadAs(const std::string& filename)
             PointerWrap p(&ptr, buffer.size(), PointerWrap::Mode::MODE_READ);
             DoState(p);
             loaded = true;
-            loadedSuccessfully = (p.GetMode() == PointerWrap::Mode::MODE_READ);
+            loadedSuccessfully = p.IsReadMode();
           }
         }
 

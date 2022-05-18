@@ -315,7 +315,7 @@ void FreeLookCamera::DoState(PointerWrap& p)
     {
       m_camera_controller->DoState(p);
     }
-    else if (p.GetMode() == PointerWrap::Mode::MODE_READ)
+    else if (p.IsReadMode())
     {
       const std::string old_type_name = old_type ? to_string(*old_type) : "";
       const std::string loaded_type_name = m_current_type ? to_string(*m_current_type) : "";

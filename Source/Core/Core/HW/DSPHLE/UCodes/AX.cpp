@@ -747,7 +747,7 @@ void AXUCode::DoAXState(PointerWrap& p)
   auto old_checksum = m_coeffs_checksum;
   p.Do(m_coeffs_checksum);
 
-  if (p.GetMode() == PointerWrap::Mode::MODE_READ && m_coeffs_checksum &&
+  if (p.IsReadMode() && m_coeffs_checksum &&
       old_checksum != m_coeffs_checksum)
   {
     if (!LoadResamplingCoefficients(true, *m_coeffs_checksum))

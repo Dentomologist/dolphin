@@ -268,7 +268,7 @@ void BluetoothRealDevice::DoState(PointerWrap& p)
 {
   bool passthrough_bluetooth = true;
   p.Do(passthrough_bluetooth);
-  if (!passthrough_bluetooth && p.GetMode() == PointerWrap::Mode::MODE_READ)
+  if (!passthrough_bluetooth && p.IsReadMode())
   {
     Core::DisplayMessage("State needs Bluetooth passthrough to be disabled. Aborting load.", 4000);
     p.SetMode(PointerWrap::Mode::MODE_VERIFY);
@@ -283,14 +283,14 @@ void BluetoothRealDevice::DoState(PointerWrap& p)
     m_transfers_mutex.lock();
 
   std::vector<u32> addresses_to_discard;
-  if (p.GetMode() != PointerWrap::Mode::MODE_READ)
+  if (!p.IsReadMode())
   {
     // Save addresses of transfer commands to discard on savestate load.
     for (const auto& transfer : m_current_transfers)
       addresses_to_discard.push_back(transfer.second.command->ios_request.address);
   }
   p.Do(addresses_to_discard);
-  if (p.GetMode() == PointerWrap::Mode::MODE_READ)
+  if (p.IsReadMode())
   {
     // On load, discard any pending transfer to make sure the emulated software is not stuck
     // waiting for the previous request to complete. This is usually not an issue as long as

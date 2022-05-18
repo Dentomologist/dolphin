@@ -662,7 +662,7 @@ void Core::DoState(PointerWrap& p)
   auto old_title = m_game_title;
   p.Do(m_game_title);
 
-  if (p.GetMode() == PointerWrap::Mode::MODE_READ &&
+  if (p.IsReadMode() &&
       (has_rom != !m_rom_path.empty() ||
        (has_rom && (old_hash != m_rom_hash || old_title != m_game_title))))
   {
@@ -691,7 +691,7 @@ void Core::DoState(PointerWrap& p)
 
   p.Do(core_state);
 
-  if (p.GetMode() == PointerWrap::Mode::MODE_READ && m_core->stateSize(m_core) == core_state.size())
+  if (p.IsReadMode() && m_core->stateSize(m_core) == core_state.size())
   {
     m_core->loadState(m_core, core_state.data());
     if (auto host = m_host.lock())

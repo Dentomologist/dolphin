@@ -59,6 +59,7 @@ public:
 
   void SetMode(Mode mode_) { mode = mode_; }
   Mode GetMode() const { return mode; }
+  bool IsReadMode() const { return mode == Mode::MODE_READ; }
   template <typename K, class V>
   void Do(std::map<K, V>& x)
   {
@@ -228,7 +229,7 @@ public:
   {
     bool s = flag.IsSet();
     Do(s);
-    if (mode == MODE_READ)
+    if (IsReadMode())
       flag.Set(s);
   }
 
@@ -237,7 +238,7 @@ public:
   {
     T temp = atomic.load(std::memory_order_relaxed);
     Do(temp);
-    if (mode == MODE_READ)
+    if (IsReadMode())
       atomic.store(temp, std::memory_order_relaxed);
   }
 
@@ -267,7 +268,7 @@ public:
 
     Do(stable);
 
-    if (mode == MODE_READ)
+    if (IsReadMode())
       x = stable != 0;
   }
 
@@ -278,7 +279,7 @@ public:
     // much range
     ptrdiff_t offset = x - base;
     Do(offset);
-    if (mode == MODE_READ)
+    if (IsReadMode())
     {
       x = base + offset;
     }
@@ -289,7 +290,7 @@ public:
     u32 cookie = arbitraryNumber;
     Do(cookie);
 
-    if (mode == PointerWrap::Mode::MODE_READ && cookie != arbitraryNumber)
+    if (IsReadMode() && cookie != arbitraryNumber)
     {
       PanicAlertFmtT(
           "Error: After \"{0}\", found {1} ({2:#x}) instead of save marker {3} ({4:#x}). Aborting "

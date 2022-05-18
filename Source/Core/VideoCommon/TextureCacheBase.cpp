@@ -502,7 +502,7 @@ std::optional<TextureCacheBase::TexPoolEntry> TextureCacheBase::DeserializeTextu
   u32 total_size = 0;
   u8* texture_data = p.DoExternal(total_size);
 
-  if (p.GetMode() != PointerWrap::Mode::MODE_READ || total_size == 0)
+  if (!p.IsReadMode() || total_size == 0)
     return std::nullopt;
 
   auto tex = AllocateTexture(config);
@@ -674,7 +674,7 @@ void TextureCacheBase::DoLoadState(PointerWrap& p)
   // Only clear out state when actually restoring/loading.
   // Since we throw away entries when not in loading mode now, we don't need to check
   // before inserting entries into the cache, as GetEntry will always return null.
-  const bool commit_state = p.GetMode() == PointerWrap::Mode::MODE_READ;
+  const bool commit_state = p.IsReadMode();
   if (commit_state)
     Invalidate();
 
