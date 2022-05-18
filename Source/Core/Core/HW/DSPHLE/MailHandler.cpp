@@ -91,7 +91,7 @@ void CMailHandler::Halt(bool _Halt)
 
 void CMailHandler::DoState(PointerWrap& p)
 {
-  if (p.GetMode() == PointerWrap::MODE_READ)
+  if (p.GetMode() == PointerWrap::Mode::MODE_READ)
   {
     Clear();
     int sz = 0;

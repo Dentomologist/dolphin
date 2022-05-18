@@ -260,7 +260,7 @@ void HostFileSystem::DoState(PointerWrap& p)
 
   // handle /tmp
   std::string Path = BuildFilename("/tmp").host_path;
-  if (p.GetMode() == PointerWrap::MODE_READ)
+  if (p.GetMode() == PointerWrap::Mode::MODE_READ)
   {
     File::DeleteDirRecursively(Path);
     File::CreateDir(Path);

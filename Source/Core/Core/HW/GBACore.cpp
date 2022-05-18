@@ -651,7 +651,7 @@ void Core::DoState(PointerWrap& p)
   {
     ::Core::DisplayMessage(fmt::format("GBA{} core not started. Aborting.", m_device_number + 1),
                            3000);
-    p.SetMode(PointerWrap::MODE_VERIFY);
+    p.SetMode(PointerWrap::Mode::MODE_VERIFY);
     return;
   }
 
@@ -662,14 +662,14 @@ void Core::DoState(PointerWrap& p)
   auto old_title = m_game_title;
   p.Do(m_game_title);
 
-  if (p.GetMode() == PointerWrap::MODE_READ &&
+  if (p.GetMode() == PointerWrap::Mode::MODE_READ &&
       (has_rom != !m_rom_path.empty() ||
        (has_rom && (old_hash != m_rom_hash || old_title != m_game_title))))
   {
     ::Core::DisplayMessage(
         fmt::format("Incompatible ROM state in GBA{}. Aborting load state.", m_device_number + 1),
         3000);
-    p.SetMode(PointerWrap::MODE_VERIFY);
+    p.SetMode(PointerWrap::Mode::MODE_VERIFY);
     return;
   }
 
@@ -684,14 +684,14 @@ void Core::DoState(PointerWrap& p)
   std::vector<u8> core_state;
   core_state.resize(m_core->stateSize(m_core));
 
-  if (p.GetMode() == PointerWrap::MODE_WRITE || p.GetMode() == PointerWrap::MODE_VERIFY)
+  if (p.GetMode() == PointerWrap::Mode::MODE_WRITE || p.GetMode() == PointerWrap::Mode::MODE_VERIFY)
   {
     m_core->saveState(m_core, core_state.data());
   }
 
   p.Do(core_state);
 
-  if (p.GetMode() == PointerWrap::MODE_READ && m_core->stateSize(m_core) == core_state.size())
+  if (p.GetMode() == PointerWrap::Mode::MODE_READ && m_core->stateSize(m_core) == core_state.size())
   {
     m_core->loadState(m_core, core_state.data());
     if (auto host = m_host.lock())

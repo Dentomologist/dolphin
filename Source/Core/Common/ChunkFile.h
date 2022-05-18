@@ -289,13 +289,13 @@ public:
     u32 cookie = arbitraryNumber;
     Do(cookie);
 
-    if (mode == PointerWrap::MODE_READ && cookie != arbitraryNumber)
+    if (mode == PointerWrap::Mode::MODE_READ && cookie != arbitraryNumber)
     {
       PanicAlertFmtT(
           "Error: After \"{0}\", found {1} ({2:#x}) instead of save marker {3} ({4:#x}). Aborting "
           "savestate load...",
           prevName, cookie, cookie, arbitraryNumber, arbitraryNumber);
-      mode = PointerWrap::MODE_MEASURE;
+      mode = PointerWrap::Mode::MODE_MEASURE;
     }
   }
 

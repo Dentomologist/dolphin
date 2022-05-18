@@ -27,10 +27,10 @@ void VideoCommon_DoState(PointerWrap& p)
   bool software = false;
   p.Do(software);
 
-  if (p.GetMode() == PointerWrap::MODE_READ && software == true)
+  if (p.GetMode() == PointerWrap::Mode::MODE_READ && software == true)
   {
     // change mode to abort load of incompatible save state.
-    p.SetMode(PointerWrap::MODE_VERIFY);
+    p.SetMode(PointerWrap::Mode::MODE_VERIFY);
   }
 
   // BP Memory
@@ -86,7 +86,7 @@ void VideoCommon_DoState(PointerWrap& p)
   p.DoMarker("Renderer");
 
   // Refresh state.
-  if (p.GetMode() == PointerWrap::MODE_READ)
+  if (p.GetMode() == PointerWrap::Mode::MODE_READ)
   {
     // Inform backend of new state from registers.
     BPReload();

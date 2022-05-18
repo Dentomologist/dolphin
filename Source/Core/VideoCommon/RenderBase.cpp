@@ -1810,7 +1810,7 @@ void Renderer::DoState(PointerWrap& p)
 
   m_bounding_box->DoState(p);
 
-  if (p.GetMode() == PointerWrap::MODE_READ)
+  if (p.GetMode() == PointerWrap::Mode::MODE_READ)
   {
     // Force the next xfb to be displayed.
     m_last_xfb_id = std::numeric_limits<u64>::max();

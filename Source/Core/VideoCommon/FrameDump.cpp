@@ -482,7 +482,7 @@ void FrameDump::CloseVideoFile()
 
 void FrameDump::DoState(PointerWrap& p)
 {
-  if (p.GetMode() == PointerWrap::MODE_READ)
+  if (p.GetMode() == PointerWrap::Mode::MODE_READ)
     ++m_savestate_index;
 }
 

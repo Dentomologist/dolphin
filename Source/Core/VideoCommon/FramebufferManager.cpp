@@ -910,7 +910,8 @@ void FramebufferManager::DoState(PointerWrap& p)
   if (!save_efb_state)
     return;
 
-  if (p.GetMode() == PointerWrap::MODE_WRITE || p.GetMode() == PointerWrap::MODE_MEASURE)
+  if (p.GetMode() == PointerWrap::Mode::MODE_WRITE ||
+      p.GetMode() == PointerWrap::Mode::MODE_MEASURE)
     DoSaveState(p);
   else
     DoLoadState(p);

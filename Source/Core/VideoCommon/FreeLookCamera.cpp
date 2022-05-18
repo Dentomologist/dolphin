@@ -298,7 +298,8 @@ Common::Vec2 FreeLookCamera::GetFieldOfViewMultiplier() const
 
 void FreeLookCamera::DoState(PointerWrap& p)
 {
-  if (p.GetMode() == PointerWrap::MODE_WRITE || p.GetMode() == PointerWrap::MODE_MEASURE)
+  if (p.GetMode() == PointerWrap::Mode::MODE_WRITE ||
+      p.GetMode() == PointerWrap::Mode::MODE_MEASURE)
   {
     p.Do(m_current_type);
     if (m_camera_controller)
@@ -314,7 +315,7 @@ void FreeLookCamera::DoState(PointerWrap& p)
     {
       m_camera_controller->DoState(p);
     }
-    else if (p.GetMode() == PointerWrap::MODE_READ)
+    else if (p.GetMode() == PointerWrap::Mode::MODE_READ)
     {
       const std::string old_type_name = old_type ? to_string(*old_type) : "";
       const std::string loaded_type_name = m_current_type ? to_string(*m_current_type) : "";
@@ -323,7 +324,7 @@ void FreeLookCamera::DoState(PointerWrap& p)
                       "'{}'.  Aborting load state",
                       old_type_name, loaded_type_name);
       Core::DisplayMessage(message, 5000);
-      p.SetMode(PointerWrap::MODE_VERIFY);
+      p.SetMode(PointerWrap::Mode::MODE_VERIFY);
     }
   }
 }

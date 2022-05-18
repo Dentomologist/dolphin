@@ -747,7 +747,7 @@ void AXUCode::DoAXState(PointerWrap& p)
   auto old_checksum = m_coeffs_checksum;
   p.Do(m_coeffs_checksum);
 
-  if (p.GetMode() == PointerWrap::MODE_READ && m_coeffs_checksum &&
+  if (p.GetMode() == PointerWrap::Mode::MODE_READ && m_coeffs_checksum &&
       old_checksum != m_coeffs_checksum)
   {
     if (!LoadResamplingCoefficients(true, *m_coeffs_checksum))
@@ -755,7 +755,7 @@ void AXUCode::DoAXState(PointerWrap& p)
       Core::DisplayMessage("Could not find the DSP polyphase resampling coefficients used by the "
                            "savestate. Aborting load state.",
                            3000);
-      p.SetMode(PointerWrap::MODE_VERIFY);
+      p.SetMode(PointerWrap::Mode::MODE_VERIFY);
       return;
     }
   }
