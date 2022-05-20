@@ -40,7 +40,7 @@ class PointerWrap
 public:
   enum Mode
   {
-    MODE_READ = 1,
+    MODE_READ,
     MODE_WRITE,
     MODE_MEASURE,
     MODE_VERIFY,
