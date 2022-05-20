@@ -40,10 +40,10 @@ class PointerWrap
 public:
   enum Mode
   {
-    MODE_READ = 1,  // load
-    MODE_WRITE,     // save
-    MODE_MEASURE,   // calculate size
-    MODE_VERIFY,    // compare
+    MODE_READ = 1,
+    MODE_WRITE,
+    MODE_MEASURE,
+    MODE_VERIFY,
   };
 
 private:
