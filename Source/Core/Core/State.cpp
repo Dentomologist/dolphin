@@ -417,17 +417,17 @@ void SaveAs(const std::string& filename, bool wait)
         const size_t buffer_size = reinterpret_cast<size_t>(ptr);
 
         // Then actually do the write.
-        PointerWrap::Mode p_mode;
+        bool is_write_mode;
         {
           std::lock_guard lk(g_cs_current_buffer);
           g_current_buffer.resize(buffer_size);
           ptr = g_current_buffer.data();
           PointerWrap p(&ptr, buffer_size, PointerWrap::Mode::MODE_WRITE);
           DoState(p);
-          p_mode = p.GetMode();
+          is_write_mode = p.IsWriteMode();
         }
 
-        if (p_mode == PointerWrap::Mode::MODE_WRITE)
+        if (is_write_mode)
         {
           Core::DisplayMessage("Saving State...", 1000);
 

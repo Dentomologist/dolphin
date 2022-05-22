@@ -60,6 +60,7 @@ public:
   void SetMode(Mode mode_) { mode = mode_; }
   Mode GetMode() const { return mode; }
   bool IsReadMode() const { return mode == Mode::MODE_READ; }
+  bool IsWriteMode() const { return mode == Mode::MODE_WRITE; }
   template <typename K, class V>
   void Do(std::map<K, V>& x)
   {

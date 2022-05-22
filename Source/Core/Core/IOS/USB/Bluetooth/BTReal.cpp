@@ -306,7 +306,7 @@ void BluetoothRealDevice::DoState(PointerWrap& p)
                     OSD::Duration::NORMAL);
   }
 
-  if (!s_has_shown_savestate_warning && p.GetMode() == PointerWrap::Mode::MODE_WRITE)
+  if (!s_has_shown_savestate_warning && p.IsWriteMode())
   {
     OSD::AddMessage("Savestates may not work with Bluetooth passthrough in all cases.\n"
                     "They will only work if no remote is connected when restoring the state,\n"
@@ -316,7 +316,7 @@ void BluetoothRealDevice::DoState(PointerWrap& p)
   }
 
   // We have finished the savestate now, so the transfers mutex can be unlocked.
-  if (p.GetMode() == PointerWrap::Mode::MODE_WRITE)
+  if (p.IsWriteMode())
     m_transfers_mutex.unlock();
 }
 

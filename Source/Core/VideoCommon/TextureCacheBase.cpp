@@ -542,7 +542,7 @@ void TextureCacheBase::DoState(PointerWrap& p)
 
   p.Do(last_entry_id);
 
-  if (p.GetMode() == PointerWrap::Mode::MODE_WRITE ||
+  if (p.IsWriteMode() ||
       p.GetMode() == PointerWrap::Mode::MODE_MEASURE)
     DoSaveState(p);
   else
