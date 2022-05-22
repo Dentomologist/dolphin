@@ -49,27 +49,27 @@ public:
 private:
   u8** m_ptr_current;
   u8* m_ptr_end;
-  Mode mode;
+  Mode m_mode;
 
 public:
-  PointerWrap(u8** ptr, size_t size, Mode mode_)
-      : m_ptr_current(ptr), m_ptr_end(*ptr + size), mode(mode_)
+  PointerWrap(u8** ptr, size_t size, Mode mode)
+      : m_ptr_current(ptr), m_ptr_end(*ptr + size), m_mode(mode)
   {
   }
 
-  void SetMeasureMode() { mode = Mode::MODE_MEASURE; }
-  void SetVerifyMode() { mode = Mode::MODE_VERIFY; }
-  bool IsReadMode() const { return mode == Mode::MODE_READ; }
-  bool IsWriteMode() const { return mode == Mode::MODE_WRITE; }
-  bool IsMeasureMode() const { return mode == Mode::MODE_MEASURE; }
-  bool IsVerifyMode() const { return mode == Mode::MODE_VERIFY; }
+  void SetMeasureMode() { m_mode = Mode::MODE_MEASURE; }
+  void SetVerifyMode() { m_mode = Mode::MODE_VERIFY; }
+  bool IsReadMode() const { return m_mode == Mode::MODE_READ; }
+  bool IsWriteMode() const { return m_mode == Mode::MODE_WRITE; }
+  bool IsMeasureMode() const { return m_mode == Mode::MODE_MEASURE; }
+  bool IsVerifyMode() const { return m_mode == Mode::MODE_VERIFY; }
   template <typename K, class V>
   void Do(std::map<K, V>& x)
   {
     u32 count = (u32)x.size();
     Do(count);
 
-    switch (mode)
+    switch (m_mode)
     {
     case MODE_READ:
       for (x.clear(); count != 0; --count)
@@ -99,7 +99,7 @@ public:
     u32 count = (u32)x.size();
     Do(count);
 
-    switch (mode)
+    switch (m_mode)
     {
     case MODE_READ:
       for (x.clear(); count != 0; --count)
@@ -158,7 +158,7 @@ public:
     bool present = x.has_value();
     Do(present);
 
-    switch (mode)
+    switch (m_mode)
     {
     case MODE_READ:
       if (present)
@@ -334,13 +334,13 @@ private:
 
   DOLPHIN_FORCE_INLINE void DoVoid(void* data, u32 size)
   {
-    if (mode != MODE_MEASURE && (*m_ptr_current + size) > m_ptr_end)
+    if (m_mode != MODE_MEASURE && (*m_ptr_current + size) > m_ptr_end)
     {
       // trying to read/write past the end of the buffer, prevent this
-      mode = MODE_MEASURE;
+      m_mode = MODE_MEASURE;
     }
 
-    switch (mode)
+    switch (m_mode)
     {
     case MODE_READ:
       memcpy(data, *m_ptr_current, size);
