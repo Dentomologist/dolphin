@@ -542,8 +542,7 @@ void TextureCacheBase::DoState(PointerWrap& p)
 
   p.Do(last_entry_id);
 
-  if (p.IsWriteMode() ||
-      p.IsMeasureMode())
+  if (p.IsWriteMode() || p.IsMeasureMode())
     DoSaveState(p);
   else
     DoLoadState(p);

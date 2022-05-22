@@ -662,9 +662,8 @@ void Core::DoState(PointerWrap& p)
   auto old_title = m_game_title;
   p.Do(m_game_title);
 
-  if (p.IsReadMode() &&
-      (has_rom != !m_rom_path.empty() ||
-       (has_rom && (old_hash != m_rom_hash || old_title != m_game_title))))
+  if (p.IsReadMode() && (has_rom != !m_rom_path.empty() ||
+                         (has_rom && (old_hash != m_rom_hash || old_title != m_game_title))))
   {
     ::Core::DisplayMessage(
         fmt::format("Incompatible ROM state in GBA{}. Aborting load state.", m_device_number + 1),
