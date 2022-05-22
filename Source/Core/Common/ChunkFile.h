@@ -38,12 +38,12 @@
 class PointerWrap
 {
 public:
-  enum Mode
+  enum class Mode
   {
-    MODE_READ,
-    MODE_WRITE,
-    MODE_MEASURE,
-    MODE_VERIFY,
+    Read,
+    Write,
+    Measure,
+    Verify,
   };
 
 private:
@@ -57,12 +57,12 @@ public:
   {
   }
 
-  void SetMeasureMode() { m_mode = Mode::MODE_MEASURE; }
-  void SetVerifyMode() { m_mode = Mode::MODE_VERIFY; }
-  bool IsReadMode() const { return m_mode == Mode::MODE_READ; }
-  bool IsWriteMode() const { return m_mode == Mode::MODE_WRITE; }
-  bool IsMeasureMode() const { return m_mode == Mode::MODE_MEASURE; }
-  bool IsVerifyMode() const { return m_mode == Mode::MODE_VERIFY; }
+  void SetMeasureMode() { m_mode = Mode::Measure; }
+  void SetVerifyMode() { m_mode = Mode::Verify; }
+  bool IsReadMode() const { return m_mode == Mode::Read; }
+  bool IsWriteMode() const { return m_mode == Mode::Write; }
+  bool IsMeasureMode() const { return m_mode == Mode::Measure; }
+  bool IsVerifyMode() const { return m_mode == Mode::Verify; }
   template <typename K, class V>
   void Do(std::map<K, V>& x)
   {
@@ -71,7 +71,7 @@ public:
 
     switch (m_mode)
     {
-    case MODE_READ:
+    case Mode::Read:
       for (x.clear(); count != 0; --count)
       {
         std::pair<K, V> pair;
@@ -81,9 +81,9 @@ public:
       }
       break;
 
-    case MODE_WRITE:
-    case MODE_MEASURE:
-    case MODE_VERIFY:
+    case Mode::Write:
+    case Mode::Measure:
+    case Mode::Verify:
       for (auto& elem : x)
       {
         Do(elem.first);
@@ -101,7 +101,7 @@ public:
 
     switch (m_mode)
     {
-    case MODE_READ:
+    case Mode::Read:
       for (x.clear(); count != 0; --count)
       {
         V value;
@@ -110,9 +110,9 @@ public:
       }
       break;
 
-    case MODE_WRITE:
-    case MODE_MEASURE:
-    case MODE_VERIFY:
+    case Mode::Write:
+    case Mode::Measure:
+    case Mode::Verify:
       for (const V& val : x)
       {
         Do(val);
@@ -160,7 +160,7 @@ public:
 
     switch (m_mode)
     {
-    case MODE_READ:
+    case Mode::Read:
       if (present)
       {
         x = std::make_optional<T>();
@@ -172,9 +172,9 @@ public:
       }
       break;
 
-    case MODE_WRITE:
-    case MODE_MEASURE:
-    case MODE_VERIFY:
+    case Mode::Write:
+    case Mode::Measure:
+    case Mode::Verify:
       if (present)
         Do(x.value());
 
@@ -334,26 +334,26 @@ private:
 
   DOLPHIN_FORCE_INLINE void DoVoid(void* data, u32 size)
   {
-    if (m_mode != MODE_MEASURE && (*m_ptr_current + size) > m_ptr_end)
+    if (m_mode != Mode::Measure && (*m_ptr_current + size) > m_ptr_end)
     {
       // trying to read/write past the end of the buffer, prevent this
-      m_mode = MODE_MEASURE;
+      m_mode = Mode::Measure;
     }
 
     switch (m_mode)
     {
-    case MODE_READ:
+    case Mode::Read:
       memcpy(data, *m_ptr_current, size);
       break;
 
-    case MODE_WRITE:
+    case Mode::Write:
       memcpy(*m_ptr_current, data, size);
       break;
 
-    case MODE_MEASURE:
+    case Mode::Measure:
       break;
 
-    case MODE_VERIFY:
+    case Mode::Verify:
       DEBUG_ASSERT_MSG(COMMON, !memcmp(data, *m_ptr_current, size),
                        "Savestate verification failure: buf {} != {} (size {}).\n", fmt::ptr(data),
                        fmt::ptr(*m_ptr_current), size);
