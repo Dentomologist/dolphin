@@ -157,6 +157,7 @@
     <ClCompile Include="NKitWarningDialog.cpp" />
     <ClCompile Include="QtUtils\AspectRatioWidget.cpp" />
     <ClCompile Include="QtUtils\BlockUserInputFilter.cpp" />
+    <ClCompile Include="QtUtils\CheckableMenu.cpp" />
     <ClCompile Include="QtUtils\DolphinFileDialog.cpp" />
     <ClCompile Include="QtUtils\DoubleClickEventFilter.cpp" />
     <ClCompile Include="QtUtils\ElidedButton.cpp" />
@@ -341,6 +342,7 @@
     <QtMoc Include="NKitWarningDialog.h" />
     <QtMoc Include="QtUtils\AspectRatioWidget.h" />
     <QtMoc Include="QtUtils\BlockUserInputFilter.h" />
+    <QtMoc Include="QtUtils\CheckableMenu.h" />
     <QtMoc Include="QtUtils\DoubleClickEventFilter.h" />
     <QtMoc Include="QtUtils\ElidedButton.h" />
     <QtMoc Include="QtUtils\FileOpenEventFilter.h" />

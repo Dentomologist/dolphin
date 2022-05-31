@@ -3,8 +3,10 @@
 
 #include "DolphinQt/MenuBar.h"
 
+#include <array>
 #include <cinttypes>
 #include <future>
+#include <utility>
 
 #include <QAction>
 #include <QActionGroup>
@@ -12,7 +14,6 @@
 #include <QFileDialog>
 #include <QFontDialog>
 #include <QInputDialog>
-#include <QMap>
 #include <QUrl>
 
 #include "Common/CommonPaths.h"
@@ -52,6 +53,7 @@
 
 #include "DolphinQt/AboutDialog.h"
 #include "DolphinQt/Host.h"
+#include "DolphinQt/QtUtils/CheckableMenu.h"
 #include "DolphinQt/QtUtils/DolphinFileDialog.h"
 #include "DolphinQt/QtUtils/ModalMessageBox.h"
 #include "DolphinQt/QtUtils/ParallelProgressDialog.h"
@@ -624,108 +626,87 @@ void MenuBar::AddGameListTypeSection(QMenu* view_menu)
   connect(grid_view, &QAction::triggered, this, &MenuBar::ShowGrid);
 }
 
-void MenuBar::AddListColumnsMenu(QMenu* view_menu)
+void MenuBar::AddListColumnsMenu(QMenu* const view_menu)
 {
-  static const QMap<QString, const Config::Info<bool>*> columns{
-      {tr("Platform"), &Config::MAIN_GAMELIST_COLUMN_PLATFORM},
-      {tr("Banner"), &Config::MAIN_GAMELIST_COLUMN_BANNER},
-      {tr("Title"), &Config::MAIN_GAMELIST_COLUMN_TITLE},
-      {tr("Description"), &Config::MAIN_GAMELIST_COLUMN_DESCRIPTION},
-      {tr("Maker"), &Config::MAIN_GAMELIST_COLUMN_MAKER},
-      {tr("File Name"), &Config::MAIN_GAMELIST_COLUMN_FILE_NAME},
-      {tr("File Path"), &Config::MAIN_GAMELIST_COLUMN_FILE_PATH},
-      {tr("Game ID"), &Config::MAIN_GAMELIST_COLUMN_GAME_ID},
-      {tr("Region"), &Config::MAIN_GAMELIST_COLUMN_REGION},
-      {tr("File Size"), &Config::MAIN_GAMELIST_COLUMN_FILE_SIZE},
-      {tr("File Format"), &Config::MAIN_GAMELIST_COLUMN_FILE_FORMAT},
-      {tr("Block Size"), &Config::MAIN_GAMELIST_COLUMN_BLOCK_SIZE},
-      {tr("Compression"), &Config::MAIN_GAMELIST_COLUMN_COMPRESSION},
-      {tr("Tags"), &Config::MAIN_GAMELIST_COLUMN_TAGS}};
+  using label_config_pair = std::pair<QString, const Config::Info<bool>*>;
+  const std::array<label_config_pair, 14> columns{
+      label_config_pair{tr("Platform"), &Config::MAIN_GAMELIST_COLUMN_PLATFORM},
+      label_config_pair{tr("Banner"), &Config::MAIN_GAMELIST_COLUMN_BANNER},
+      label_config_pair{tr("Title"), &Config::MAIN_GAMELIST_COLUMN_TITLE},
+      label_config_pair{tr("Description"), &Config::MAIN_GAMELIST_COLUMN_DESCRIPTION},
+      label_config_pair{tr("Maker"), &Config::MAIN_GAMELIST_COLUMN_MAKER},
+      label_config_pair{tr("File Name"), &Config::MAIN_GAMELIST_COLUMN_FILE_NAME},
+      label_config_pair{tr("File Path"), &Config::MAIN_GAMELIST_COLUMN_FILE_PATH},
+      label_config_pair{tr("Game ID"), &Config::MAIN_GAMELIST_COLUMN_GAME_ID},
+      label_config_pair{tr("Region"), &Config::MAIN_GAMELIST_COLUMN_REGION},
+      label_config_pair{tr("File Size"), &Config::MAIN_GAMELIST_COLUMN_FILE_SIZE},
+      label_config_pair{tr("File Format"), &Config::MAIN_GAMELIST_COLUMN_FILE_FORMAT},
+      label_config_pair{tr("Block Size"), &Config::MAIN_GAMELIST_COLUMN_BLOCK_SIZE},
+      label_config_pair{tr("Compression"), &Config::MAIN_GAMELIST_COLUMN_COMPRESSION},
+      label_config_pair{tr("Tags"), &Config::MAIN_GAMELIST_COLUMN_TAGS},
+  };
 
-  QActionGroup* column_group = new QActionGroup(this);
-  m_cols_menu = view_menu->addMenu(tr("List Columns"));
-  column_group->setExclusive(false);
-
-  for (const auto& key : columns.keys())
+  auto* const columns_menu = new CheckableMenu(tr("List Columns"), view_menu);
+  connect(columns_menu, &CheckableMenu::ItemToggled, this, &MenuBar::ColumnVisibilityToggled);
+  for (const auto& [label, config_variable] : columns)
   {
-    const Config::Info<bool>* const config = columns[key];
-    QAction* action = column_group->addAction(m_cols_menu->addAction(key));
-    action->setCheckable(true);
-    action->setChecked(Config::Get(*config));
-    connect(action, &QAction::toggled, [this, config, key](bool value) {
-      Config::SetBase(*config, value);
-      emit ColumnVisibilityToggled(key, value);
-    });
+    columns_menu->AddConfigItem(label, config_variable);
   }
+
+  m_cols_menu = columns_menu;
+  view_menu->addMenu(m_cols_menu);
 }
 
 void MenuBar::AddShowPlatformsMenu(QMenu* view_menu)
 {
-  static const QMap<QString, const Config::Info<bool>*> platform_map{
-      {tr("Show Wii"), &Config::MAIN_GAMELIST_LIST_WII},
-      {tr("Show GameCube"), &Config::MAIN_GAMELIST_LIST_GC},
-      {tr("Show WAD"), &Config::MAIN_GAMELIST_LIST_WAD},
-      {tr("Show ELF/DOL"), &Config::MAIN_GAMELIST_LIST_ELF_DOL}};
+  using label_config_pair = std::pair<QString, const Config::Info<bool>*>;
+  const std::array<label_config_pair, 4> platforms{
+      label_config_pair{tr("Show Wii"), &Config::MAIN_GAMELIST_LIST_WII},
+      label_config_pair{tr("Show GameCube"), &Config::MAIN_GAMELIST_LIST_GC},
+      label_config_pair{tr("Show WAD"), &Config::MAIN_GAMELIST_LIST_WAD},
+      label_config_pair{tr("Show ELF/DOL"), &Config::MAIN_GAMELIST_LIST_ELF_DOL},
+  };
 
-  QActionGroup* platform_group = new QActionGroup(this);
-  QMenu* plat_menu = view_menu->addMenu(tr("Show Platforms"));
-  platform_group->setExclusive(false);
-
-  for (const auto& key : platform_map.keys())
+  auto* const platforms_menu = new CheckableMenu(tr("Show Platforms"), view_menu);
+  connect(platforms_menu, &CheckableMenu::ItemToggled, this,
+          &MenuBar::GameListPlatformVisibilityToggled);
+  for (const auto& [label, config_variable] : platforms)
   {
-    const Config::Info<bool>* const config = platform_map[key];
-    QAction* action = platform_group->addAction(plat_menu->addAction(key));
-    action->setCheckable(true);
-    action->setChecked(Config::Get(*config));
-    connect(action, &QAction::toggled, [this, config, key](bool value) {
-      Config::SetBase(*config, value);
-      emit GameListPlatformVisibilityToggled(key, value);
-    });
+    platforms_menu->AddConfigItem(label, config_variable);
   }
+
+  view_menu->addMenu(platforms_menu);
 }
 
 void MenuBar::AddShowRegionsMenu(QMenu* view_menu)
 {
-  static const QMap<QString, const Config::Info<bool>*> region_map{
-      {tr("Show JPN"), &Config::MAIN_GAMELIST_LIST_JPN},
-      {tr("Show PAL"), &Config::MAIN_GAMELIST_LIST_PAL},
-      {tr("Show USA"), &Config::MAIN_GAMELIST_LIST_USA},
-      {tr("Show Australia"), &Config::MAIN_GAMELIST_LIST_AUSTRALIA},
-      {tr("Show France"), &Config::MAIN_GAMELIST_LIST_FRANCE},
-      {tr("Show Germany"), &Config::MAIN_GAMELIST_LIST_GERMANY},
-      {tr("Show Italy"), &Config::MAIN_GAMELIST_LIST_ITALY},
-      {tr("Show Korea"), &Config::MAIN_GAMELIST_LIST_KOREA},
-      {tr("Show Netherlands"), &Config::MAIN_GAMELIST_LIST_NETHERLANDS},
-      {tr("Show Russia"), &Config::MAIN_GAMELIST_LIST_RUSSIA},
-      {tr("Show Spain"), &Config::MAIN_GAMELIST_LIST_SPAIN},
-      {tr("Show Taiwan"), &Config::MAIN_GAMELIST_LIST_TAIWAN},
-      {tr("Show World"), &Config::MAIN_GAMELIST_LIST_WORLD},
-      {tr("Show Unknown"), &Config::MAIN_GAMELIST_LIST_UNKNOWN}};
+  using label_config_pair = std::pair<QString, const Config::Info<bool>*>;
+  const std::array<label_config_pair, 14> regions{
+      label_config_pair{tr("Show JPN"), &Config::MAIN_GAMELIST_LIST_JPN},
+      label_config_pair{tr("Show PAL"), &Config::MAIN_GAMELIST_LIST_PAL},
+      label_config_pair{tr("Show USA"), &Config::MAIN_GAMELIST_LIST_USA},
+      label_config_pair{tr("Show Australia"), &Config::MAIN_GAMELIST_LIST_AUSTRALIA},
+      label_config_pair{tr("Show France"), &Config::MAIN_GAMELIST_LIST_FRANCE},
+      label_config_pair{tr("Show Germany"), &Config::MAIN_GAMELIST_LIST_GERMANY},
+      label_config_pair{tr("Show Italy"), &Config::MAIN_GAMELIST_LIST_ITALY},
+      label_config_pair{tr("Show Korea"), &Config::MAIN_GAMELIST_LIST_KOREA},
+      label_config_pair{tr("Show Netherlands"), &Config::MAIN_GAMELIST_LIST_NETHERLANDS},
+      label_config_pair{tr("Show Russia"), &Config::MAIN_GAMELIST_LIST_RUSSIA},
+      label_config_pair{tr("Show Spain"), &Config::MAIN_GAMELIST_LIST_SPAIN},
+      label_config_pair{tr("Show Taiwan"), &Config::MAIN_GAMELIST_LIST_TAIWAN},
+      label_config_pair{tr("Show World"), &Config::MAIN_GAMELIST_LIST_WORLD},
+      label_config_pair{tr("Show Unknown"), &Config::MAIN_GAMELIST_LIST_UNKNOWN},
+  };
 
-  QMenu* const region_menu = view_menu->addMenu(tr("Show Regions"));
-  const QAction* const show_all_regions = region_menu->addAction(tr("Show All"));
-  const QAction* const hide_all_regions = region_menu->addAction(tr("Hide All"));
-  region_menu->addSeparator();
-
-  for (const auto& key : region_map.keys())
+  auto* const regions_menu = new CheckableMenu(tr("Show Regions"), view_menu);
+  connect(regions_menu, &CheckableMenu::ItemToggled, this,
+          &MenuBar::GameListRegionVisibilityToggled);
+  for (const auto& [label, config_variable] : regions)
   {
-    const Config::Info<bool>* const config = region_map[key];
-    QAction* const menu_item = region_menu->addAction(key);
-    menu_item->setCheckable(true);
-    menu_item->setChecked(Config::Get(*config));
-
-    const auto set_visibility = [this, config, key, menu_item](bool visibility) {
-      menu_item->setChecked(visibility);
-      Config::SetBase(*config, visibility);
-      emit GameListRegionVisibilityToggled(key, visibility);
-    };
-    const auto set_visible = std::bind(set_visibility, true);
-    const auto set_hidden = std::bind(set_visibility, false);
-
-    connect(menu_item, &QAction::toggled, set_visibility);
-    connect(show_all_regions, &QAction::triggered, menu_item, set_visible);
-    connect(hide_all_regions, &QAction::triggered, menu_item, set_hidden);
+    regions_menu->AddConfigItem(label, config_variable);
   }
+
+  view_menu->addMenu(regions_menu);
 }
 
 void MenuBar::AddMovieMenu()

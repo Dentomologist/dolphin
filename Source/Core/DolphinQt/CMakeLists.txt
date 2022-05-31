@@ -275,6 +275,8 @@ add_executable(dolphin-emu
   NetPlay/NetPlaySetupDialog.h
   NetPlay/PadMappingDialog.cpp
   NetPlay/PadMappingDialog.h
+  QtUtils/CheckableMenu.cpp
+  QtUtils/CheckableMenu.h
   QtUtils/DolphinFileDialog.cpp
   QtUtils/DolphinFileDialog.h
   QtUtils/DoubleClickEventFilter.cpp
