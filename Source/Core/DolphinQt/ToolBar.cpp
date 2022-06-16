@@ -15,11 +15,10 @@
 #include "DolphinQt/Resources.h"
 #include "DolphinQt/Settings.h"
 
-static QSize ICON_SIZE(32, 32);
+static QSize ICON_SIZE(40, 40);
 
 ToolBar::ToolBar(QWidget* parent) : QToolBar(parent)
 {
-  setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
   setMovable(!Settings::Instance().AreWidgetsLocked());
   setFloatable(false);
   setIconSize(ICON_SIZE);
@@ -114,7 +113,7 @@ void ToolBar::MakeActions()
   m_set_pc_action = addAction(tr("Set PC"), this, &ToolBar::SetPCPressed);
 
   m_open_action = addAction(tr("Open"), this, &ToolBar::OpenPressed);
-  m_refresh_action = addAction(tr("Refresh"), [this] { emit RefreshPressed(); });
+  m_refresh_action = addAction(tr("Refresh Game List"), this, &ToolBar::RefreshPressed);
   m_refresh_action->setEnabled(false);
 
   addSeparator();
@@ -122,8 +121,8 @@ void ToolBar::MakeActions()
   m_pause_play_action = addAction(tr("Play"), this, &ToolBar::PlayPressed);
 
   m_stop_action = addAction(tr("Stop"), this, &ToolBar::StopPressed);
-  m_fullscreen_action = addAction(tr("FullScr"), this, &ToolBar::FullScreenPressed);
-  m_screenshot_action = addAction(tr("ScrShot"), this, &ToolBar::ScreenShotPressed);
+  m_fullscreen_action = addAction(tr("Fullscreen"), this, &ToolBar::FullScreenPressed);
+  m_screenshot_action = addAction(tr("Screenshot"), this, &ToolBar::ScreenShotPressed);
 
   addSeparator();
 
@@ -131,25 +130,6 @@ void ToolBar::MakeActions()
   m_graphics_action = addAction(tr("Graphics"), this, &ToolBar::GraphicsPressed);
   m_controllers_action = addAction(tr("Controllers"), this, &ToolBar::ControllersPressed);
   m_controllers_action->setEnabled(true);
-
-  // Ensure every button has about the same width
-  std::vector<QWidget*> items;
-  for (const auto& action :
-       {m_open_action, m_pause_play_action, m_stop_action, m_stop_action, m_fullscreen_action,
-        m_screenshot_action, m_config_action, m_graphics_action, m_controllers_action,
-        m_step_action, m_step_over_action, m_step_out_action, m_skip_action, m_show_pc_action,
-        m_set_pc_action})
-  {
-    items.emplace_back(widgetForAction(action));
-  }
-
-  std::vector<int> widths;
-  std::transform(items.begin(), items.end(), std::back_inserter(widths),
-                 [](QWidget* item) { return item->sizeHint().width(); });
-
-  const int min_width = *std::max_element(widths.begin(), widths.end()) * 0.85;
-  for (QWidget* widget : items)
-    widget->setMinimumWidth(min_width);
 }
 
 void ToolBar::UpdatePausePlayButtonState(const bool playing_state)
@@ -195,4 +175,23 @@ void ToolBar::UpdateIcons()
   m_config_action->setIcon(Resources::GetScaledThemeIcon("config"));
   m_controllers_action->setIcon(Resources::GetScaledThemeIcon("classic"));
   m_graphics_action->setIcon(Resources::GetScaledThemeIcon("graphics"));
+
+  // Ensure every button has about the same width
+  std::vector<QWidget*> items;
+  for (const auto& action :
+       {m_open_action, m_pause_play_action, m_stop_action, m_stop_action, m_fullscreen_action,
+        m_screenshot_action, m_config_action, m_graphics_action, m_controllers_action,
+        m_step_action, m_step_over_action, m_step_out_action, m_skip_action, m_show_pc_action,
+        m_set_pc_action})
+  {
+    items.emplace_back(widgetForAction(action));
+  }
+
+  std::vector<int> widths;
+  std::transform(items.begin(), items.end(), std::back_inserter(widths),
+                 [](QWidget* item) { return item->sizeHint().width(); });
+
+  const int min_width = *std::max_element(widths.begin(), widths.end()) * 0.85;
+  for (QWidget* widget : items)
+    widget->setMinimumWidth(min_width);
 }

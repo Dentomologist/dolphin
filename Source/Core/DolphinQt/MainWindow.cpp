@@ -213,6 +213,8 @@ MainWindow::MainWindow(std::unique_ptr<BootParameters> boot_parameters,
   setUnifiedTitleAndToolBarOnMac(true);
   setAcceptDrops(true);
   setAttribute(Qt::WA_NativeWindow);
+  // Allow ToolBar tooltips to show up even when the game window has focus
+  setAttribute(Qt::WA_AlwaysShowToolTips);
 
   InitControllers();
 
