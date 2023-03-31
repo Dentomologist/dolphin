@@ -5,7 +5,7 @@
 
 #include <QWidget>
 
-class GraphicsWidget : public QWidget
+class ConfigWidget : public QWidget
 {
   Q_OBJECT
 protected:

@@ -41,6 +41,17 @@ add_executable(dolphin-emu
   Config/CheatWarningWidget.h
   Config/CommonControllersWidget.cpp
   Config/CommonControllersWidget.h
+  Config/ConfigControls/ConfigBool.cpp
+  Config/ConfigControls/ConfigBool.h
+  Config/ConfigControls/ConfigChoice.cpp
+  Config/ConfigControls/ConfigChoice.h
+  Config/ConfigControls/ConfigInteger.cpp
+  Config/ConfigControls/ConfigInteger.h
+  Config/ConfigControls/ConfigRadio.cpp
+  Config/ConfigControls/ConfigRadio.h
+  Config/ConfigControls/ConfigSlider.cpp
+  Config/ConfigControls/ConfigSlider.h
+  Config/ConfigControls/ConfigWidget.h
   Config/ControllerInterface/ControllerInterfaceWindow.cpp
   Config/ControllerInterface/ControllerInterfaceWindow.h
   Config/ControllerInterface/DualShockUDPClientAddServerDialog.cpp
@@ -69,23 +80,10 @@ add_executable(dolphin-emu
   Config/GeckoCodeWidget.h
   Config/Graphics/AdvancedWidget.cpp
   Config/Graphics/AdvancedWidget.h
-  Config/Graphics/BalloonTip.cpp
-  Config/Graphics/BalloonTip.h
   Config/Graphics/EnhancementsWidget.cpp
   Config/Graphics/EnhancementsWidget.h
   Config/Graphics/GeneralWidget.cpp
   Config/Graphics/GeneralWidget.h
-  Config/Graphics/GraphicsBool.cpp
-  Config/Graphics/GraphicsBool.h
-  Config/Graphics/GraphicsChoice.cpp
-  Config/Graphics/GraphicsChoice.h
-  Config/Graphics/GraphicsInteger.cpp
-  Config/Graphics/GraphicsInteger.h
-  Config/Graphics/GraphicsRadio.cpp
-  Config/Graphics/GraphicsRadio.h
-  Config/Graphics/GraphicsSlider.cpp
-  Config/Graphics/GraphicsSlider.h
-  Config/Graphics/GraphicsWidget.h
   Config/Graphics/GraphicsWindow.cpp
   Config/Graphics/GraphicsWindow.h
   Config/Graphics/HacksWidget.cpp
@@ -169,6 +167,8 @@ add_executable(dolphin-emu
   Config/PropertiesDialog.h
   Config/SettingsWindow.cpp
   Config/SettingsWindow.h
+  Config/ToolTipControls/BalloonTip.cpp
+  Config/ToolTipControls/BalloonTip.h
   Config/ToolTipControls/ToolTipCheckBox.cpp
   Config/ToolTipControls/ToolTipCheckBox.h
   Config/ToolTipControls/ToolTipComboBox.cpp
