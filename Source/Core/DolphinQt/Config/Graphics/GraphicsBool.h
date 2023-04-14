@@ -24,16 +24,3 @@ private:
   const Config::Info<bool>& m_setting;
   bool m_reverse;
 };
-
-class GraphicsBoolEx : public ToolTipRadioButton
-{
-  Q_OBJECT
-public:
-  GraphicsBoolEx(const QString& label, const Config::Info<bool>& setting, bool reverse = false);
-
-private:
-  void Update();
-
-  const Config::Info<bool>& m_setting;
-  bool m_reverse;
-};
