@@ -801,10 +801,6 @@ static void RestoreStateAndUnlock(Core::System& system, const bool unpause_on_un
   // audio has to come after CPU, because CPU thread can wait for audio thread (m_throttle).
   system.GetDSP().GetDSPEmulator()->PauseAndLock(false);
 
-  // video has to come after CPU, because CPU thread can wait for video thread
-  // (s_efbAccessRequested).
-  system.GetFifo().PauseAndLock(false, false);
-
   ResetRumble();
 
   // CPU is unlocked last because CPU::PauseAndLock contains the synchronization
