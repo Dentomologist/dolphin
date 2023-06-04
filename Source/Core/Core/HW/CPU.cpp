@@ -294,13 +294,12 @@ void CPUManager::Continue()
 
 bool CPUManager::PauseAndLock(const bool control_adjacent)
 {
-  bool was_unpaused = false;
   m_stepping_lock.lock();
 
   std::unique_lock state_lock(m_state_change_lock);
   m_state_paused_and_locked = true;
 
-    was_unpaused = m_state == State::Running;
+  const bool was_unpaused = m_state == State::Running;
   SetStateLocked(State::Stepping);
 
   while (m_state_cpu_thread_active)
