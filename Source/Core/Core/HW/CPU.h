@@ -93,8 +93,8 @@ public:
   // Cannot be used by System threads as it will deadlock. It is threadsafe otherwise.
   // "control_adjacent" causes PauseAndLock to behave like EnableStepping by modifying the
   //   state of the Audio and FIFO subsystems as well.
-  void RestoreStateAndUnlock(bool unpause_on_unlock, bool control_adjacent);
   bool PauseAndLock();
+  void RestoreStateAndUnlock(bool unpause_on_unlock);
 
   // Adds a job to be executed during on the CPU thread. This should be combined with
   // PauseAndLock(), as while the CPU is in the run loop, it won't execute the function.
