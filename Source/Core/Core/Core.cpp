@@ -806,7 +806,7 @@ static bool PauseAndLock(Core::System& system, bool do_lock, bool unpause_on_unl
     // first pause the CPU
     // This acquires a wrapper mutex and converts the current thread into
     // a temporary replacement CPU Thread.
-    was_unpaused = system.GetCPU().PauseAndLock(true);
+    was_unpaused = system.GetCPU().PauseAndLock(true, true, false);
   }
 
   system.GetExpansionInterface().PauseAndLock(do_lock, false);
