@@ -64,18 +64,15 @@ void FifoManager::DoState(PointerWrap& p)
   p.Do(m_syncing_suspended);
 }
 
-void FifoManager::PauseAndLock(Core::System& system, bool doLock, bool unpauseOnUnlock)
+void FifoManager::PauseAndLock(Core::System& system)
 {
-  if (doLock)
-  {
-    SyncGPU(SyncGPUReason::Other);
-    EmulatorState(false);
+  SyncGPU(SyncGPUReason::Other);
+  EmulatorState(false);
 
-    if (!system.IsDualCoreMode() || m_use_deterministic_gpu_thread)
-      return;
+  if (!system.IsDualCoreMode() || m_use_deterministic_gpu_thread)
+    return;
 
-    m_gpu_mainloop.WaitYield(std::chrono::milliseconds(100), Host_YieldToUI);
-  }
+  m_gpu_mainloop.WaitYield(std::chrono::milliseconds(100), Host_YieldToUI);
 }
 
 void FifoManager::Init(Core::System& system)
