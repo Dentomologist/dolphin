@@ -64,7 +64,7 @@ void FifoManager::DoState(PointerWrap& p)
   p.Do(m_syncing_suspended);
 }
 
-void FifoManager::PauseAndLock(Core::System& system)
+void FifoManager::Pause(Core::System& system)
 {
   SyncGPU(SyncGPUReason::Other);
   EmulatorState(false);

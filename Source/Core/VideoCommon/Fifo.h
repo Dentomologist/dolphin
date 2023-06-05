@@ -51,7 +51,7 @@ public:
   void Shutdown();
   void Prepare(Core::System& system);  // Must be called from the CPU thread.
   void DoState(PointerWrap& f);
-  void PauseAndLock(Core::System& system);
+  void Pause(Core::System& system);
   void UpdateWantDeterminism(Core::System& system, bool want);
   bool UseDeterministicGPUThread() const { return m_use_deterministic_gpu_thread; }
   bool UseSyncGPU() const { return m_config_sync_gpu; }
