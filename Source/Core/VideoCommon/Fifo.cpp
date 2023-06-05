@@ -76,11 +76,6 @@ void FifoManager::PauseAndLock(Core::System& system, bool doLock, bool unpauseOn
 
     m_gpu_mainloop.WaitYield(std::chrono::milliseconds(100), Host_YieldToUI);
   }
-  else
-  {
-    if (unpauseOnUnlock)
-      EmulatorState(true);
-  }
 }
 
 void FifoManager::Init(Core::System& system)

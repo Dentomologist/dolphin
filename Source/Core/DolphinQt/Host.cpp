@@ -109,7 +109,8 @@ static void RunWithGPUThreadInactive(std::function<void()> f)
     auto& fifo = system.GetFifo();
     fifo.PauseAndLock(system, true, was_running);
     f();
-    fifo.PauseAndLock(system, false, was_running);
+    if (was_running)
+      fifo.EmulatorState(true);
   }
   else
   {
