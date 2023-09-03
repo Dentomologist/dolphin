@@ -684,7 +684,7 @@ std::string GenerateImGuiPixelShader(bool linear_space_output)
   // Note that if HDR is enabled, ideally we should multiply by
   // the paper white brightness for readability.
   if (linear_space_output)
-    code.Write(" * pow(v_col0, float4(2.2f, 2.2f, 2.2f, 1.0f));\n}}\n");
+    code.Write(" * pow(abs(v_col0), float4(2.2f, 2.2f, 2.2f, 1.0f));\n}}\n");
   else
     code.Write(" * v_col0;\n}}\n");
 

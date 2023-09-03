@@ -167,7 +167,7 @@ static void WriteSampleFunction(ShaderCode& code, const EFBCopyParams& params, A
 
   if (params.apply_gamma)
   {
-    code.Write("  texcol_raw = uint4(round(pow(float4(texcol_raw) / 255.0,\n"
+    code.Write("  texcol_raw = uint4(round(pow(abs(float4(texcol_raw) / 255.0),\n"
                "                     float4(gamma_rcp, gamma_rcp, gamma_rcp, 1.0)) * 255.0));\n");
   }
 

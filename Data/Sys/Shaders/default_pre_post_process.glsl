@@ -31,7 +31,7 @@ float3 LinearTosRGBGamma(float3 color)
 		if (x <= 0.0031308)
 			x = x * 12.92;
 		else
-			x = (1.0 + a) * pow(x, 1.0 / 2.4) - a;
+			x = (1.0 + a) * pow(abs(x), 1.0 / 2.4) - a;
 		color[i] = x;
 	}
 
@@ -55,7 +55,7 @@ float4 QuickSample(float3 uvw, float gamma)
 #endif
 
 	float4 color = texture(samp1, uvw);
-	color.rgb = pow(color.rgb, float3(gamma));
+	color.rgb = pow(abs(color.rgb), float3(gamma));
 	return color;
 }
 float4 QuickSample(float2 uv, float w, float gamma)
@@ -366,7 +366,7 @@ void main()
 			color = texture(samp1, v_tex0);
 
 		// Convert to linear before doing any other of follow up operations.
-		color.rgb = pow(color.rgb, float3(game_gamma));
+		color.rgb = pow(abs(color.rgb), float3(game_gamma));
 	}
 
 	if (OptionEnabled(correct_color_space))
@@ -395,12 +395,12 @@ void main()
 		if (OptionEnabled(sdr_display_gamma_sRGB))
 			color.rgb = LinearTosRGBGamma(color.rgb);
 		else
-			color.rgb = pow(color.rgb, float3(1.0 / sdr_display_custom_gamma));
+			color.rgb = pow(abs(color.rgb), float3(1.0 / sdr_display_custom_gamma));
 	}
 	// Restore the original gamma without changes
 	else
 	{
-			color.rgb = pow(color.rgb, float3(1.0 / game_gamma));
+			color.rgb = pow(abs(color.rgb), float3(1.0 / game_gamma));
 	}
 
 	SetOutput(color);
