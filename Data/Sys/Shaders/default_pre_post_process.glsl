@@ -21,19 +21,21 @@ mat3 from_PAL = transpose(mat3(
 	0.000000000000000,	1.00000000000000,			0.000000000000000,
 	0.000000000000000,	0.0118044782106489,		0.988195521789351));
 
-float3 LinearTosRGBGamma(float3 color)
+float LinearTosRGBGammaComponent(float component)
 {
 	const float a = 0.055;
 
-	for (int i = 0; i < 3; ++i)
-	{
-		float x = color[i];
-		if (x <= 0.0031308)
-			x = x * 12.92;
-		else
-			x = (1.0 + a) * pow(abs(x), 1.0 / 2.4) - a;
-		color[i] = x;
-	}
+	if (component <= 0.0031308)
+		return component * 12.92;
+
+	return (1.0 + a) * pow(abs(component), 1.0 / 2.4) - a;
+}
+
+float3 LinearTosRGBGamma(float3 color)
+{
+	color.x = LinearTosRGBGammaComponent(color.x);
+	color.y = LinearTosRGBGammaComponent(color.y);
+	color.z = LinearTosRGBGammaComponent(color.z);
 
 	return color;
 }
