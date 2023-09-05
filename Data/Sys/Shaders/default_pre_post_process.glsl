@@ -240,21 +240,21 @@ float4 AreaSampling(float3 uvw, float gamma)
 	avg_color += area_se * QuickSampleByPixel(float2(f_end.x, f_end.y) + offset, uvw.z, gamma);
 	
 	// Determine the size of the pixel box.
-	int x_range = int(f_end.x - f_beg.x + 0.5);
-	int y_range = int(f_end.y - f_beg.y + 0.5);
+	uint x_range = int(f_end.x - f_beg.x + 0.5);
+	uint y_range = int(f_end.y - f_beg.y + 0.5);
 
 	// Workaround to compile the shader with DX11/12.
 	// If this isn't done, it will complain that the loop could have too many iterations.
 	// This number should be enough to guarantee downscaling from very high to very small resolutions.
 	// Note that this number might be referenced in the UI.
-	const int max_iterations = 16;
+	const uint max_iterations_per_dimension = 16;
 
 	// Fix up the average calculations in case we reached the upper limit
-	x_range = min(x_range, max_iterations);
-	y_range = min(y_range, max_iterations);
+	x_range = min(x_range, max_iterations_per_dimension);
+	y_range = min(y_range, max_iterations_per_dimension);
 
 	// Accumulate top and bottom edge pixels.
-	for (int ix = 0; ix < max_iterations; ++ix)
+	for (uint ix = 0; ix < max_iterations_per_dimension; ++ix)
 	{
 		if (ix < x_range)
 		{
@@ -264,9 +264,11 @@ float4 AreaSampling(float3 uvw, float gamma)
 		}
 	}
 
+	const uint max_iterations = max_iterations_per_dimension * max_iterations_per_dimension;
 	// Accumulate left and right edge pixels and all the pixels in between.
-	for (int iy = 0; iy < max_iterations; ++iy)
+	for (uint iteration = 0; iteration < max_iterations; ++iteration)
 	{
+		uint iy = iteration / max_iterations_per_dimension;
 		if (iy < y_range)
 		{
 			float y = f_beg.y + 1.0 + float(iy);
@@ -274,13 +276,11 @@ float4 AreaSampling(float3 uvw, float gamma)
 			avg_color += area_w * QuickSampleByPixel(float2(f_beg.x, y) + offset, uvw.z, gamma);
 			avg_color += area_e * QuickSampleByPixel(float2(f_end.x, y) + offset, uvw.z, gamma);
 
-			for (int ix = 0; ix < max_iterations; ++ix)
+			uint ix = iteration % max_iterations_per_dimension;
+			if (ix < x_range)
 			{
-				if (ix < x_range)
-				{
-					float x = f_beg.x + 1.0 + float(ix);
-					avg_color += QuickSampleByPixel(float2(x, y) + offset, uvw.z, gamma);
-				}
+				float x = f_beg.x + 1.0 + float(ix);
+				avg_color += QuickSampleByPixel(float2(x, y) + offset, uvw.z, gamma);
 			}
 		}
 	}
