@@ -119,7 +119,8 @@ GameController::GameController(SDL_GameController* const gamecontroller,
     // Motion
     const auto add_sensor = [this](SDL_SensorType type, std::string_view sensor_name,
                                    const SDLMotionAxisList& axes) {
-      if (SDL_GameControllerSetSensorEnabled(m_gamecontroller, type, SDL_TRUE) == 0)
+      if (SDL_GameControllerHasSensor(m_gamecontroller, type) &&
+          SDL_GameControllerSetSensorEnabled(m_gamecontroller, type, SDL_TRUE) == 0)
       {
         for (const SDLMotionAxis& axis : axes)
         {
