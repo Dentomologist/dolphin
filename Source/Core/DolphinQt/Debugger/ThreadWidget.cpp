@@ -137,8 +137,10 @@ QLineEdit* ThreadWidget::CreateLineEdit() const
 {
   QLineEdit* line_edit = new QLineEdit(QStringLiteral("00000000"));
   line_edit->setReadOnly(true);
-  line_edit->setFixedWidth(
-      line_edit->fontMetrics().boundingRect(QStringLiteral(" 00000000 ")).width());
+  // Calculate width using 10 digits instead of 8 to add space for margins.
+  const int width = line_edit->fontMetrics().boundingRect(QStringLiteral("0000000000")).width();
+  line_edit->setFixedWidth(width);
+  line_edit->setAlignment(Qt::AlignCenter);
   return line_edit;
 }
 
