@@ -799,7 +799,7 @@ static void RestoreStateAndUnlock(Core::System& system, const bool unpause_on_un
     return;
 
   // audio has to come after CPU, because CPU thread can wait for audio thread (m_throttle).
-  system.GetDSP().GetDSPEmulator()->PauseAndLock(false);
+  system.GetDSP().GetDSPEmulator()->UnpauseAndUnlock();
 
   ResetRumble();
 
