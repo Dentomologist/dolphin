@@ -106,12 +106,16 @@ public:
     if (count() == 0)
       return;
 
-    int width = std::min(rect.width(), static_cast<int>(rect.height() * m_aspect_ratio));
+    const int width_for_available_height = static_cast<int>(rect.height() * m_aspect_ratio);
+    int width = std::min(rect.width(), width_for_available_height);
     width = std::max(width, minimumSize().width());
-    int height = std::min(rect.height(), static_cast<int>(rect.width() / m_aspect_ratio));
+
+    const int height_for_available_width = static_cast<int>(rect.width() / m_aspect_ratio);
+    int height = std::min(rect.height(), height_for_available_width);
     height = std::max(height, minimumSize().height());
-    int x_offset = (rect.width() - width) / 2;
-    int y_offset = (rect.height() - height) / 2;
+
+    const int x_offset = (rect.width() - width) / 2;
+    const int y_offset = (rect.height() - height) / 2;
 
     QLayoutItem* const item = itemAt(0);
     item->setGeometry(rect.adjusted(x_offset, y_offset, -x_offset, -y_offset));
