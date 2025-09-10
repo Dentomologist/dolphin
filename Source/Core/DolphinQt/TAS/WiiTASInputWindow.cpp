@@ -124,6 +124,7 @@ WiiTASInputWindow::WiiTASInputWindow(QWidget* parent, int num) : TASInputWindow(
   top_layout->addWidget(m_classic_right_stick_box);
 
   m_remote_accelerometer_box = new QGroupBox(tr("Wii Remote Accelerometer"));
+  EnableHidingChildren(m_remote_accelerometer_box);
 
   constexpr u16 ACCEL_ZERO_G = WiimoteEmu::Wiimote::ACCEL_ZERO_G << 2;
   constexpr u16 ACCEL_ONE_G = WiimoteEmu::Wiimote::ACCEL_ONE_G << 2;
@@ -157,11 +158,13 @@ WiiTASInputWindow::WiiTASInputWindow(QWidget* parent, int num) : TASInputWindow(
   m_remote_accelerometer_box->setLayout(remote_accelerometer_layout);
 
   m_remote_gyroscope_box = new QGroupBox(tr("Wii Remote Gyroscope"));
+  EnableHidingChildren(m_remote_gyroscope_box);
 
-  // MotionPlus can report values using either a slow scale (greater precision) or a fast scale
-  // (greater range). To ensure the user can select every possible value, TAS input uses the
-  // precision of the slow scale and the range of the fast scale. This does mean TAS input has more
-  // selectable values than MotionPlus has reportable values, but that's not too big of a problem.
+  // MotionPlus can report values using either a slow scale (greater precision) or a fast
+  // scale (greater range). To ensure the user can select every possible value, TAS input
+  // uses the precision of the slow scale and the range of the fast scale. This does mean
+  // TAS input has more selectable values than MotionPlus has reportable values, but that's
+  // not too big of a problem.
   constexpr double GYRO_STRETCH =
       static_cast<double>(WiimoteEmu::MotionPlus::CALIBRATION_FAST_SCALE_DEGREES) /
       WiimoteEmu::MotionPlus::CALIBRATION_SLOW_SCALE_DEGREES;
@@ -197,6 +200,7 @@ WiiTASInputWindow::WiiTASInputWindow(QWidget* parent, int num) : TASInputWindow(
   m_remote_gyroscope_box->setLayout(remote_gyroscope_layout);
 
   m_nunchuk_accelerometer_box = new QGroupBox(tr("Nunchuk Accelerometer"));
+  EnableHidingChildren(m_nunchuk_accelerometer_box);
 
   auto* nunchuk_accelerometer_x_layout =
       // i18n: Refers to a 3D axis (used when mapping motion controls)
@@ -283,6 +287,7 @@ WiiTASInputWindow::WiiTASInputWindow(QWidget* parent, int num) : TASInputWindow(
 
   m_remote_buttons_box = new QGroupBox(tr("Wii Remote Buttons"));
   m_remote_buttons_box->setLayout(buttons_layout);
+  EnableHidingChildren(m_remote_buttons_box);
 
   auto* nunchuk_buttons_layout = new QHBoxLayout;
   nunchuk_buttons_layout->addWidget(m_c_button);
@@ -291,6 +296,7 @@ WiiTASInputWindow::WiiTASInputWindow(QWidget* parent, int num) : TASInputWindow(
 
   m_nunchuk_buttons_box = new QGroupBox(tr("Nunchuk Buttons"));
   m_nunchuk_buttons_box->setLayout(nunchuk_buttons_layout);
+  EnableHidingChildren(m_nunchuk_buttons_box);
 
   m_classic_a_button = CreateButton(QStringLiteral("&A"), WiimoteEmu::Classic::BUTTONS_GROUP,
                                     WiimoteEmu::Classic::A_BUTTON, &m_classic_overrider);
@@ -347,6 +353,7 @@ WiiTASInputWindow::WiiTASInputWindow(QWidget* parent, int num) : TASInputWindow(
 
   m_classic_buttons_box = new QGroupBox(tr("Classic Buttons"));
   m_classic_buttons_box->setLayout(classic_buttons_layout);
+  EnableHidingChildren(m_classic_buttons_box);
 
   auto* layout = new QVBoxLayout;
   layout->addLayout(top_layout);
@@ -530,3 +537,15 @@ void WiiTASInputWindow::UpdateInputOverrideFunction()
   if (m_active_extension == WiimoteEmu::ExtensionNumber::CLASSIC)
     GetExtension()->SetInputOverrideFunction(m_classic_overrider.GetInputOverrideFunction());
 }
+
+/*void WiiTASInputWindow::PreventStickResizing()
+{
+  m_visual_ar->setFixedSize(m_visual_ar->size());
+  m_nunchuk_stick_box->setFixedSize(m_nunchuk_stick_box->size());
+}
+
+void WiiTASInputWindow::AllowStickResizing()
+{
+  m_visual_ar->setFixedSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
+  m_nunchuk_stick_box->setFixedSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
+}*/

@@ -68,6 +68,7 @@ TASInputWindow::TASInputWindow(QWidget* parent) : QDialog(parent)
 
   m_settings_box = new QGroupBox(tr("Settings"));
   m_settings_box->setLayout(settings_layout);
+  EnableHidingChildren(m_settings_box);
 }
 
 int TASInputWindow::GetTurboPressFrames() const
@@ -231,6 +232,23 @@ TASSpinBox* TASInputWindow::CreateSliderValuePair(QBoxLayout* layout, int defaul
     layout->setAlignment(slider, Qt::AlignRight);
 
   return value;
+}
+
+void TASInputWindow::EnableHidingChildren(QGroupBox* const group_box)
+{
+  const auto set_child_visibility = [this, group_box](const bool checked) {
+    for (auto& child : group_box->findChildren<QWidget*>())
+      child->setVisible(checked);
+
+    group_box->setFlat(!checked);
+
+    PreventStickResizing();
+    adjustSize();
+    AllowStickResizing();
+  };
+
+  group_box->setCheckable(true);
+  connect(group_box, &QGroupBox::toggled, set_child_visibility);
 }
 
 std::optional<ControlState> TASInputWindow::GetButton(TASCheckBox* checkbox,

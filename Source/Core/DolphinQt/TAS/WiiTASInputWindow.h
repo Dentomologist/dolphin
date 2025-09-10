@@ -36,6 +36,10 @@ public:
 
   void UpdateExtension(int extension);
   void UpdateMotionPlus(bool attached);
+/*
+protected:
+  void PreventStickResizing() override;
+  void AllowStickResizing() override;*/
 
 private:
   WiimoteEmu::Wiimote* GetWiimote();

@@ -159,6 +159,9 @@ protected:
   TASSpinBox* CreateSliderValuePair(QBoxLayout* layout, int default_, int max,
                                     QKeySequence shortcut_key_sequence, Qt::Orientation orientation,
                                     QWidget* shortcut_widget);
+  void EnableHidingChildren(QGroupBox* const group_box);
+  virtual void PreventStickResizing() {}
+  virtual void AllowStickResizing() {}
 
   void changeEvent(QEvent* event) override;
 
