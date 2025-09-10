@@ -25,6 +25,13 @@ signals:
 public slots:
   void SetX(u16 x);
   void SetY(u16 y);
+  /*
+  bool hasHeightForWidth() const override { return true; }
+  int heightForWidth(const int width) const override
+  {
+    constexpr float RATIO = (1 + IR_MAX_Y - IR_MIN_Y) / (1 + IR_MAX_X - IR_MIN_X);
+    return static_cast<int>(width * RATIO);
+  }*/
 
 protected:
   void paintEvent(QPaintEvent* event) override;

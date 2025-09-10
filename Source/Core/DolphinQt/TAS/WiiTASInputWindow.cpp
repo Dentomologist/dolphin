@@ -75,10 +75,24 @@ WiiTASInputWindow::WiiTASInputWindow(QWidget* parent, int num) : TASInputWindow(
   connect(visual, &IRWidget::ChangedX, m_ir_x_value, &QSpinBox::setValue);
   connect(visual, &IRWidget::ChangedY, m_ir_y_value, &QSpinBox::setValue);
 
-  auto* visual_ar = new AspectRatioWidget(visual, IRWidget::IR_MAX_X, IRWidget::IR_MAX_Y);
+  // auto* visual_ar = new AspectRatioWidget(visual, IRWidget::IR_MAX_X, IRWidget::IR_MAX_Y);
+
+  /* auto* const grid_layout = new QGridLayout;
+  grid_layout->addItem(new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Expanding), 0, 0);
+  grid_layout->addItem(new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Expanding), 2, 2);
+  grid_layout->addWidget(visual, 1, 1);
+  grid_layout->setColumnStretch(1, 1);
+  grid_layout->setRowStretch(1, 1);*/
+
+  constexpr float RATIO = (1.0f + IRWidget::IR_MAX_X - IRWidget::IR_MIN_X) /
+                          (1.0f + IRWidget::IR_MAX_Y - IRWidget::IR_MIN_Y);
+  auto* aspect_layout = new AspectRatioLayout(RATIO);
+  aspect_layout->setDefaultSize(QSize{150, 150});
+  //aspect_layout->setMinimumSize(QSize{64, 48});
+  aspect_layout->addWidget(visual);
 
   auto* visual_layout = new QHBoxLayout;
-  visual_layout->addWidget(visual_ar);
+  visual_layout->addLayout(aspect_layout);
   visual_layout->addLayout(y_layout);
 
   auto* ir_layout = new QVBoxLayout;
